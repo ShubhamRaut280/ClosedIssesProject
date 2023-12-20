@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shubham.gitclosedissues.ApiRelated.issuesData;
 import com.shubham.gitclosedissues.ApiRelated.jsonModel.ClosedIssues;
 import com.shubham.gitclosedissues.recyclerrelated.Model;
@@ -31,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import kotlin.sequences.FlatteningSequence;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     TextView error;
+    FloatingActionButton refresh;
 
     ArrayList<Model> list = new ArrayList<>();
     adapter adapter = new adapter(MainActivity.this,list);
@@ -55,7 +58,16 @@ ProgressBar pb;
         recyclerView = findViewById(R.id.recycler);
         pb = findViewById(R.id.progressBar);
         error = findViewById(R.id.error);
+        refresh = findViewById(R.id.refresh);
 
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                retrofitwork();
+                Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

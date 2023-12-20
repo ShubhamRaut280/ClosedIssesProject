@@ -3,5 +3,7 @@
     <string name="search">Search</string>
     <string name="neterror">Something went wrong. Please Check Internet Connection</string>
     <string name="notfound">Issue not found!</string>
+    <string name="splash">Get closed issues from a Github Repository</string>
+    <string name="repo">Repo: https://github.com/WeMakeDevs/roadmaps</string>
 
 </resources>
