@@ -1,17 +1,22 @@
 package com.shubham.gitclosedissues;
 
 import static android.content.ContentValues.TAG;
+import static android.widget.Toast.LENGTH_LONG;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shubham.gitclosedissues.ApiRelated.issuesData;
@@ -21,7 +26,6 @@ import com.shubham.gitclosedissues.recyclerrelated.adapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,22 +39,30 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView error;
+
     ArrayList<Model> list = new ArrayList<>();
-RecyclerView recyclerView;
+    adapter adapter = new adapter(MainActivity.this,list);
+
+    RecyclerView recyclerView;
 ProgressBar pb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.main)));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recycler);
         pb = findViewById(R.id.progressBar);
+        error = findViewById(R.id.error);
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         pb.setVisibility(View.VISIBLE);
         retrofitwork();
+
+
     }
 
 
@@ -60,7 +72,6 @@ ProgressBar pb;
     // for fetching data using api
     public void retrofitwork()
     {
-        pb.setVisibility(View.GONE);
 
         String url = "https://api.github.com/repos/WeMakeDevs/roadmaps/";
         String token = "token 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";
@@ -93,9 +104,10 @@ ProgressBar pb;
 
 
                     }
+                    pb.setVisibility(View.GONE);
+
 
                     Log.d(TAG, "onResponse: Size of list : "+ list.size());
-                    adapter adapter = new adapter(MainActivity.this,list);
                     recyclerView.setAdapter(adapter);
 
 
@@ -105,8 +117,10 @@ ProgressBar pb;
 
             @Override
             public void onFailure(Call<List<ClosedIssues>> call, Throwable t) {
+                pb.setVisibility(View.GONE);
+                error.setVisibility(View.VISIBLE);
                 Log.d(TAG, "onFailure: Something is wrong request failed : "+ t);
-                Toast.makeText(MainActivity.this, "Something is wrong please check the network", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Something is wrong please check the network", LENGTH_LONG).show();
 
             }
         });
@@ -114,6 +128,31 @@ ProgressBar pb;
 
 
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.searchmenu,menu);
+
+        MenuItem item = menu.findItem(R.id.search_menu);
+        SearchView searchView =  (SearchView)item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     public String getDate(Date date)
@@ -134,4 +173,9 @@ ProgressBar pb;
 
         return result;
 }
+
+
+
+
+
 }

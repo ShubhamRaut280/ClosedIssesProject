@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Closed Issues</string>
+    <string name="search">Search</string>
+    <string name="neterror">Something went wrong. Please Check Internet Connection</string>
+    <string name="notfound">Issue not found!</string>
+
 </resources>
