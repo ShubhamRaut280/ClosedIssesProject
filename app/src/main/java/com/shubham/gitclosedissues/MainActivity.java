@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import kotlin.sequences.FlatteningSequence;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,7 +85,7 @@ ProgressBar pb;
     {
 
         String url = "https://api.github.com/repos/WeMakeDevs/roadmaps/";
-        String token = "token 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";
+        String token = "token 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";
 
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
@@ -97,6 +96,8 @@ ProgressBar pb;
             @Override
             public void onResponse(Call<List<ClosedIssues>> call, Response<List<ClosedIssues>> response) {
                 Log.d(TAG, "onResponse: Everything is ok till now");
+
+
                 if(response.isSuccessful() && response.body()!=null)
                 {
                     for (ClosedIssues issue: response.body()) {
@@ -125,6 +126,8 @@ ProgressBar pb;
 
 
                 }
+
+                
             }
 
             @Override
